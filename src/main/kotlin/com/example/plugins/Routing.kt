@@ -23,12 +23,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 fun Application.configureRouting() {
 
     routing {
-        fun Application.module(testing: Boolean = false) {
-            routing {
-                get("/") {
-                    call.respondText("Hello, world!")
-                }
-            }
+
 
         get("/sign/{id_sign}") {
             val siginId = call.parameters["id_sign"]
@@ -51,6 +46,67 @@ fun Application.configureRouting() {
             }
             call.respondText(Json.encodeToString<List<MarshNamesM>>(a), ContentType.Application.Json)
         }
+
+            get ("/allMarsh") {
+
+
+                val l = mutableListOf<busstposCorrestion>()
+                val li = mutableListOf<List<String>>()
+                var u = mutableListOf<MarshrutM>()
+
+                val a = transaction {
+                    var marshids = marshruts.selectAll().map { it[marshruts.idm] }.distinct()
+                    println(marshids)
+                    for(res in marshids){
+                    val marshname = marshNames.select(marshNames.id eq res).map{it[marshNames.name]}.first()
+                    val marshid = marshNames.select(marshNames.name eq marshname).map{it[marshNames.id]}.first()
+
+                    marshruts.select(marshruts.idm eq res)
+                        .map{ l.add((busstposCorrestion(it[marshruts.id],listOf(it[marshruts.idost],it[marshruts.idostplus]))))}
+                    l.sortBy { it.id }
+                    l.forEach { li.add(it.first)}
+
+                    var list = li.flatten().distinct()
+                    var lis = mutableListOf<bustoptimewith>()
+
+                    var listGeoPosFalse = mutableListOf<List<geopos>>()
+
+                    for(i in list){
+                        var secBuffer = marshruts.select(marshruts.idm.eq(res) and marshruts.idost.eq(i))
+                            .map { MarshMTime(clock = it[marshruts.clock]) }.first().clock
+
+
+                        lis.add(busStop.select(busStop.id eq i)
+                            .map {bustoptimewith(BusStopM(it[busStop.id],
+                                it[busStop.name],
+                                geopos(it[busStop.lat],
+                                    it[busStop.lng])),
+                                secBuffer) }
+                            .first())
+                    }
+
+                    listGeoPosFalse.add(traictori.select(traictori.idm eq res).map { geopos(it[traictori.lat],it[traictori.long]) })
+
+
+                    var listGeoPosTrue = listGeoPosFalse.flatten()
+
+                    u.add(marshruts.select(marshruts.idm eq res).map{ (MarshrutM(marshid,marshname,lis,listGeoPosTrue)) }.first())
+
+                        l.clear()
+                        li.clear()
+                        list = mutableListOf()
+
+                }}
+
+
+                call.respondText(Json.encodeToString<List<MarshrutM>>(u), ContentType.Application.Json)
+
+            }
+
+
+
+
+
 
 
 
@@ -90,34 +146,14 @@ fun Application.configureRouting() {
 
 
 
-
-
-
-
-
                     listGeoPosFalse.add(traictori.select(traictori.idm eq res).map { geopos(it[traictori.lat],it[traictori.long]) })
-
-
 
 
                 var listGeoPosTrue = listGeoPosFalse.flatten()
 
 
-
-
-
-
-
-
-
-
-
                 marshruts.select(marshruts.idm eq res).map{ (MarshrutM(marshid,marshname,lis,listGeoPosTrue)) }.first()
-
-
             }
-
-
             call.respondText(Json.encodeToString<MarshrutM>(a), ContentType.Application.Json)
 
         }
@@ -136,4 +172,4 @@ fun Application.configureRouting() {
     }
 
 
-}}
+}

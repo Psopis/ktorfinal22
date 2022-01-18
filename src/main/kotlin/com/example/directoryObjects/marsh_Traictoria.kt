@@ -10,6 +10,6 @@ object traictori: Table("traiktoria_marshruta"){
     val long = double("long")
 }
 @Serializable
-data class traictoria(val idm:String = "",val geopos: geopos)
+data class Traictoria(val idm:String = "", val geopos: geopos)
 @Serializable
 data class geopos(val lat: Double,val long:Double)

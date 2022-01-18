@@ -16,3 +16,5 @@ object marshruts : Table("marsruts"){
 data class MarshrutM(val id: String = "", val idm_Foreign: String = "", val idOst:List<bustoptimewith>, val lineMarshtriectori :List<geopos>, val clock:String = "")
 @Serializable
 data class MarshMTime(val id : String = "",val clock:String = "")
+@Serializable
+data class MarshM(val id: String = "", val idOst:String)
