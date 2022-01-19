@@ -23,8 +23,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 fun Application.configureRouting() {
 
     routing {
-
-
         get("/sign/{id_sign}") {
             val siginId = call.parameters["id_sign"]
             val a = transaction {
@@ -35,9 +33,6 @@ fun Application.configureRouting() {
             }
             call.respondText(Json.encodeToString<UserM?>(a), ContentType.Application.Json)
         }
-
-
-
         get ("/namesMarsh"){
             val a = transaction {
                 marshNames.selectAll().map{
@@ -48,12 +43,9 @@ fun Application.configureRouting() {
         }
 
             get ("/allMarsh") {
-
-
                 val l = mutableListOf<busstposCorrestion>()
                 val li = mutableListOf<List<String>>()
                 var u = mutableListOf<MarshrutM>()
-
                 val a = transaction {
                     var marshids = marshruts.selectAll().map { it[marshruts.idm] }.distinct()
                     println(marshids)
@@ -143,16 +135,17 @@ fun Application.configureRouting() {
                                 secBuffer) }
                                 .first())
             }
+                val track = marshruts.select(marshruts.idm eq res).map{it[marshruts.id_traictori]}.first()
 
-
-
-                    listGeoPosFalse.add(traictori.select(traictori.idm eq res).map { geopos(it[traictori.lat],it[traictori.long]) })
+                var traicId = marshruts.select(marshruts.id_traictori eq track).map{it[marshruts.id_traictori]}.first()
+                listGeoPosFalse.add(traictori.select(traictori.idm eq traicId).map { geopos(it[traictori.lat],it[traictori.long]) })
 
 
                 var listGeoPosTrue = listGeoPosFalse.flatten()
-
+                listGeoPosFalse.clear()
 
                 marshruts.select(marshruts.idm eq res).map{ (MarshrutM(marshid,marshname,lis,listGeoPosTrue)) }.first()
+
             }
             call.respondText(Json.encodeToString<MarshrutM>(a), ContentType.Application.Json)
 

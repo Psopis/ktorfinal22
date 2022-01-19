@@ -11,9 +11,10 @@ object marshruts : Table("marsruts"){
     val idost = varchar("idost",100)
     val idostplus = varchar("idostplus",100)
     val clock = varchar("timer",100)
+    val id_traictori = varchar("id_traictori",30)
 }
 @Serializable
-data class MarshrutM(val id: String = "", val idm_Foreign: String = "", val idOst:List<bustoptimewith>, val lineMarshtriectori :List<geopos>, val clock:String = "")
+data class MarshrutM(val id: String = "", val idm_Foreign: String = "", val idOst:List<bustoptimewith> = listOf<bustoptimewith>(), val lineMarshtriectori :List<geopos>, val clock:String = "", val idtraictori:String = "")
 @Serializable
 data class MarshMTime(val id : String = "",val clock:String = "")
 @Serializable
