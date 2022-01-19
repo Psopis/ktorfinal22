@@ -77,13 +77,16 @@ fun Application.configureRouting() {
                             .first())
                     }
 
-                    listGeoPosFalse.add(traictori.select(traictori.idm eq res).map { geopos(it[traictori.lat],it[traictori.long]) })
+                        val track = marshruts.select(marshruts.idm eq res).map{it[marshruts.id_traictori]}.first()
+
+                        var traicId = marshruts.select(marshruts.id_traictori eq track).map{it[marshruts.id_traictori]}.first()
+                    listGeoPosFalse.add(traictori.select(traictori.idm eq traicId).map { geopos(it[traictori.lat],it[traictori.long]) })
 
 
                     var listGeoPosTrue = listGeoPosFalse.flatten()
 
                     u.add(marshruts.select(marshruts.idm eq res).map{ (MarshrutM(marshid,marshname,lis,listGeoPosTrue)) }.first())
-
+                        listGeoPosFalse.clear()
                         l.clear()
                         li.clear()
                         list = mutableListOf()
