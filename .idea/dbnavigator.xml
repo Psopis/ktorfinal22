@@ -24,17 +24,11 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes>
-      <connection connection-id="9cc551ba-95a4-4b55-a1a4-132f7be66ca9">
-        <schema name="information_schema" object-types="view" />
-        <schema name="pg_catalog" object-types="view, function" />
-        <schema name="public" object-types="table, view, sequence, function, constraint, index, column, dataset trigger" />
-      </connection>
-    </loaded-nodes>
+    <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="9cc551ba-95a4-4b55-a1a4-132f7be66ca9">
-      <console name="Connection" type="STANDARD" schema="public" session="Main">alter table marsruts drop column time;</console>
+      <console name="Connection" type="STANDARD" schema="public" session="Main"><![CDATA[alter table marsruts drop column time;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
@@ -90,13 +84,13 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="9cc551ba-95a4-4b55-a1a4-132f7be66ca9" active="true">
+      <connection id="9cc551ba-95a4-4b55-a1a4-132f7be66ca9" active="true" signed="true">
         <database>
           <name value="Connection" />
           <description value="" />
           <database-type value="POSTGRES" />
           <config-type value="BASIC" />
-          <database-version value="13.5" />
+          <database-version value="13.6" />
           <driver-source value="BUILTIN" />
           <driver-library value="" />
           <driver value="" />

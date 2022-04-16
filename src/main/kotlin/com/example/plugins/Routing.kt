@@ -200,7 +200,12 @@ fun Application.configureRouting() {
 
 
         }
-
+        delete("/deleteUser/{id}") {
+            var param = call.parameters["id"]
+            transaction {
+                Users.deleteWhere { Users.idnum eq param.toString() }
+            }
+        }
 
     }
 
