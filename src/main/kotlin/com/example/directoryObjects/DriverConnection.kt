@@ -15,7 +15,7 @@ class DriverConnection(
     suspend fun startBroadcast(){
         connection?.let { connect ->
             for (frame in connect.incoming) {
-               println(this)
+
                     channel.send(frame.copy())
 
             }

@@ -1,27 +1,36 @@
 package com.example.plugins
 
+import buschannel
 import com.example.directoryObjects.DriverConnection
 import com.example.directoryObjects.busStop
+import com.example.directoryObjects.busconnection
+import com.example.directoryObjects.geopos
 import io.ktor.application.*
 import io.ktor.http.cio.websocket.*
 import io.ktor.routing.*
 import io.ktor.websocket.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.select
 import java.time.Duration
 import java.util.*
 
 var listsOfChannels = Collections.synchronizedMap<Int, BroadcastChannel<Frame>>(mutableMapOf())
-var connection: DefaultWebSocketSession? = null
-var websocId: String = ""
-var defaultWebsocket = mutableMapOf<String, DefaultWebSocketSession?>()
+
+
 var mutableSet = Collections.synchronizedList<DriverConnection>(mutableListOf())
 fun Application.configureSockets() {
 
 
-    val stateflow: MutableStateFlow<String> = MutableStateFlow("")
+
 
     install(WebSockets) {
         pingPeriod = Duration.ofSeconds(15)
@@ -33,6 +42,24 @@ fun Application.configureSockets() {
 
 
     routing {
+        webSocket("/all") {
+
+            GlobalScope.launch(Dispatchers.Default) {
+                buschannel.collect(){ response ->
+
+                    send(response.toString())
+                    delay(3000)
+                }
+            }
+            while (true) {
+                delay(2000)
+                if (mutableSet != null) {
+                    DriverGenerator.connect()
+                } else {
+                    DriverGenerator.disconnect()
+                }
+            }
+        }
 
         webSocket("/passenger/{idpassenger}") {
             val idpassenger = call.parameters["idpassenger"].toString()
@@ -70,6 +97,7 @@ fun Application.configureSockets() {
                 driver.startBroadcast()
             }
         }
+
     }
 }
 

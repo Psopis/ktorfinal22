@@ -6,6 +6,7 @@ import com.example.directoryObjects.*
 import com.example.marshruts
 import io.ktor.application.*
 import io.ktor.http.*
+import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
@@ -15,6 +16,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.deleteWhere as deleteWhere
 
 
 fun Application.configureRouting() {
@@ -204,6 +206,18 @@ fun Application.configureRouting() {
             var param = call.parameters["id"]
             transaction {
                 Users.deleteWhere { Users.idnum eq param.toString() }
+            }
+        }
+        post("/addUser"){
+        val parameters = call.receive<UserM>()
+            transaction {
+                Users.insert {
+
+                    it[Users.idnum] = parameters.id.toString()
+                    it[Users.name] = parameters.name.toString()
+                    it[Users.user_type] = parameters.User_type.toString()
+
+                }
             }
         }
 
