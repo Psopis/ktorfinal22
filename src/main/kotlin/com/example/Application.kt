@@ -20,7 +20,7 @@ fun main() {
 //    )
 
     Database.connect(
-        "jdbc:postgresql://krdszxssdjsazp:f6b72d186e110d132e0162efcdd2bf896246a092584ee75edd00e434d27f6f43@ec2-52-206-182-219.compute-1.amazonaws.com:5432/d1a862t8349704",
+        "jdbc:postgresql://ec2-52-206-182-219.compute-1.amazonaws.com:5432/d1a862t8349704?sslmode=require",
         driver = "org.postgresql.Driver",
         user = "krdszxssdjsazp",
         password ="f6b72d186e110d132e0162efcdd2bf896246a092584ee75edd00e434d27f6f43"
