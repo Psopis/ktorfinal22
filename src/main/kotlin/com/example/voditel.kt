@@ -14,30 +14,29 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-object DriverGenerator{
+object DriverGenerator {
     var job: Job? = null
     fun connect() {
-        for(connection in mutableSet){
+        for (connection in mutableSet) {
             job = GlobalScope.launch {
-                delay(5000)
-                while (true){
+
+                while (true) {
                     connection.channel.consumeEach { value ->
-                        if(value is Frame.Text){
-                    val geoposition = Json.decodeFromString<geopos>(value.readText())
-                        buschannel.emit(busconnection(connection.id.toInt(), value.toString()))
+                        if (value is Frame.Text) {
+                            val geoposition = Json.decodeFromString<geopos>(value.readText())
+                            buschannel.emit(busconnection(connection.id.toInt(), geoposition))
+                        }
                     }
-                    }
-
-
                 }
-
             }
 
-        }}
+        }
+    }
+
     fun disconnect() {
         job?.cancel()
         job = null
     }
 }
 
-val buschannel = MutableSharedFlow<busconnection>(0,1, onBufferOverflow = BufferOverflow.DROP_LATEST)
+val buschannel = MutableSharedFlow<busconnection>(0, 1, onBufferOverflow = BufferOverflow.DROP_LATEST)
