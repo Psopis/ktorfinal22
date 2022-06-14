@@ -29,7 +29,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="9cc551ba-95a4-4b55-a1a4-132f7be66ca9">
-      <console name="Connection" type="STANDARD" schema="public" session="Main">alter table marsruts drop column time;</console>
+      <console name="Connection" type="STANDARD" schema="public" session="Main"><![CDATA[alter table marsruts drop column time;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">

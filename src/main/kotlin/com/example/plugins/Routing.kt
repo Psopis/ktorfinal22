@@ -40,7 +40,6 @@ fun Application.configureRouting() {
             }
             call.respondText(Json.encodeToString<List<MarshNamesM>>(a), ContentType.Application.Json)
         }
-
         get("/allMarsh") {
             val l = mutableListOf<busstposCorrestion>()
             val li = mutableListOf<List<String>>()
@@ -72,8 +71,6 @@ fun Application.configureRouting() {
                     for (i in list) {
                         var secBuffer = marshruts.select(marshruts.idm.eq(res) and marshruts.idost.eq(i))
                             .map { MarshMTime(clock = it[marshruts.clock]) }.first().clock
-
-
                         lis.add(busStop.select(busStop.id eq i)
                             .map {
                                 bustoptimewith(
@@ -90,7 +87,6 @@ fun Application.configureRouting() {
                             }
                             .first())
                     }
-
                     val track = marshruts.select(marshruts.idm eq res).map { it[marshruts.id_traictori] }.first()
 
                     var traicId =
@@ -113,19 +109,8 @@ fun Application.configureRouting() {
 
                 }
             }
-
-
             call.respondText(Json.encodeToString<List<MarshrutM>>(u), ContentType.Application.Json)
-
         }
-
-
-
-
-
-
-
-
 
         get("/OneMarsh/{id}") {
             val res = call.parameters["id"]?.toString() ?: ""
@@ -151,13 +136,9 @@ fun Application.configureRouting() {
                 var lis = mutableListOf<bustoptimewith>()
 
                 var listGeoPosFalse = mutableListOf<List<geopos>>()
-
-
                 for (i in list) {
                     var secBuffer = marshruts.select(marshruts.idm.eq(res) and marshruts.idost.eq(i))
                         .map { MarshMTime(clock = it[marshruts.clock]) }.first().clock
-
-
                     lis.add(busStop.select(busStop.id eq i)
                         .map {
                             bustoptimewith(
@@ -175,32 +156,28 @@ fun Application.configureRouting() {
                         .first())
                 }
                 val track = marshruts.select(marshruts.idm eq res).map { it[marshruts.id_traictori] }.first()
-
                 var traicId =
                     marshruts.select(marshruts.id_traictori eq track).map { it[marshruts.id_traictori] }.first()
                 listGeoPosFalse.add(
                     traictori.select(traictori.idm eq traicId).map { geopos(it[traictori.lat], it[traictori.long]) })
-
-
                 var listGeoPosTrue = listGeoPosFalse.flatten()
                 listGeoPosFalse.clear()
 
                 marshruts.select(marshruts.idm eq res).map { (MarshrutM(marshid, marshname, lis, listGeoPosTrue)) }
                     .first()
-
             }
             call.respondText(Json.encodeToString<MarshrutM>(a), ContentType.Application.Json)
-
         }
-
 
         get("/marsh") {
             val result = listsOfChannels.keys.toList()
-
-
             call.respondText(Json.encodeToString<List<Int>>(result), ContentType.Application.Json)
-
-
+        }
+        get("/allUsers") {
+            val a = transaction {
+                Users.selectAll().map { UserM(it[Users.name], it[Users.idnum], it[Users.user_type]) }
+            }
+            call.respondText(Json.encodeToString<List<UserM>>(a), ContentType.Application.Json)
         }
         delete("/deleteUser/{id}") {
             var param = call.parameters["id"]
@@ -208,8 +185,9 @@ fun Application.configureRouting() {
                 Users.deleteWhere { Users.idnum eq param.toString() }
             }
         }
-        post("/addUser"){
-        val parameters = call.receive<UserM>()
+
+        post("/addUser") {
+            val parameters = call.receive<UserM>()
             transaction {
                 Users.insert {
 
@@ -220,6 +198,8 @@ fun Application.configureRouting() {
                 }
             }
         }
+
+
 
     }
 
