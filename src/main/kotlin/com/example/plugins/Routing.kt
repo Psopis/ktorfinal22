@@ -192,7 +192,7 @@ fun Application.configureRouting() {
                 Users.insert {
 
                     it[Users.idnum] = parameters.id.toString()
-                    it[Users.name] = parameters.name.toString()
+                    it[Users.name] = ""
                     it[Users.user_type] = parameters.User_type.toString()
 
                 }
