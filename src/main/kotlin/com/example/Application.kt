@@ -11,6 +11,7 @@ import io.ktor.server.netty.*
 import org.jetbrains.exposed.sql.Database
 
 fun main() {
+
     val port = Integer.parseInt(System.getenv("PORT"))
 //    Database.connect(
 //        "jdbc:postgresql://ec2-54-204-128-96.compute-1.amazonaws.com:5432/d43qcb6atqt206?sslmode=require",
@@ -37,5 +38,9 @@ install(ContentNegotiation) {
         configureSockets()
     }.start(wait = true)
 }
+
+
+
+
 
 

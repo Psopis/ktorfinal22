@@ -3,6 +3,8 @@ package com.example.plugins
 import com.example.MarshMTime
 import com.example.MarshrutM
 import com.example.directoryObjects.*
+import com.example.functions.addRoute
+import com.example.functions.deleteRoute
 import com.example.marshruts
 import io.ktor.application.*
 import io.ktor.http.*
@@ -100,7 +102,7 @@ fun Application.configureRouting() {
 
                     u.add(
                         marshruts.select(marshruts.idm eq res)
-                            .map { (MarshrutM(marshid, marshname, lis, listGeoPosTrue)) }.first()
+                            .map { (MarshrutM(marshid.toInt(), marshname, lis, listGeoPosTrue)) }.first()
                     )
                     listGeoPosFalse.clear()
                     l.clear()
@@ -136,9 +138,12 @@ fun Application.configureRouting() {
                 var lis = mutableListOf<bustoptimewith>()
 
                 var listGeoPosFalse = mutableListOf<List<geopos>>()
+                println("list $list")
+                println("list $li")
                 for (i in list) {
                     var secBuffer = marshruts.select(marshruts.idm.eq(res) and marshruts.idost.eq(i))
                         .map { MarshMTime(clock = it[marshruts.clock]) }.first().clock
+                    println("secbuffer $secBuffer")
                     lis.add(busStop.select(busStop.id eq i)
                         .map {
                             bustoptimewith(
@@ -163,7 +168,7 @@ fun Application.configureRouting() {
                 var listGeoPosTrue = listGeoPosFalse.flatten()
                 listGeoPosFalse.clear()
 
-                marshruts.select(marshruts.idm eq res).map { (MarshrutM(marshid, marshname, lis, listGeoPosTrue)) }
+                marshruts.select(marshruts.idm eq res).map { (MarshrutM(marshid.toInt(), marshname, lis, listGeoPosTrue)) }
                     .first()
             }
             call.respondText(Json.encodeToString<MarshrutM>(a), ContentType.Application.Json)
@@ -190,18 +195,42 @@ fun Application.configureRouting() {
             val parameters = call.receive<UserM>()
             transaction {
                 Users.insert {
-
                     it[Users.idnum] = parameters.id.toString()
                     it[Users.name] = ""
                     it[Users.user_type] = parameters.User_type.toString()
-
                 }
             }
         }
+        post("/createRoute"){
+            val parameters = call.receive<MarshrutM>()
+
+            var liststops = mutableListOf<String>()
+            var clock = mutableListOf<String>()
+            for(id in parameters.idOst){
+                liststops.add(id.first.id)
+                clock.add(id.second)
+            }
 
 
-
+            addRoute(parameters, liststops, clock)
     }
+       post("/editRoute"){
+           val parameters = call.receive<MarshrutM>()
+           var liststops = mutableListOf<String>()
+           var clock = mutableListOf<String>()
+           for(id in parameters.idOst){
+               liststops.add(id.first.id)
+               clock.add(id.second)
+           }
+           deleteRoute(parameters)
+           addRoute(parameters, liststops, clock)
+       }
+        post("/deleteRoute"){
+            val parameters = call.receive<MarshrutM>()
+            deleteRoute(parameters)
 
+        }
+
+}
 
 }
