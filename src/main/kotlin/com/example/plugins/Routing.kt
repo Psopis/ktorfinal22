@@ -102,7 +102,7 @@ fun Application.configureRouting() {
 
                     u.add(
                         marshruts.select(marshruts.idm eq res)
-                            .map { (MarshrutM(marshid.toInt(), marshname, lis, listGeoPosTrue)) }.first()
+                            .map { (MarshrutM(marshid, marshname, lis, listGeoPosTrue)) }.first()
                     )
                     listGeoPosFalse.clear()
                     l.clear()
@@ -168,7 +168,7 @@ fun Application.configureRouting() {
                 var listGeoPosTrue = listGeoPosFalse.flatten()
                 listGeoPosFalse.clear()
 
-                marshruts.select(marshruts.idm eq res).map { (MarshrutM(marshid.toInt(), marshname, lis, listGeoPosTrue)) }
+                marshruts.select(marshruts.idm eq res).map { (MarshrutM(marshid, marshname, lis, listGeoPosTrue)) }
                     .first()
             }
             call.respondText(Json.encodeToString<MarshrutM>(a), ContentType.Application.Json)
