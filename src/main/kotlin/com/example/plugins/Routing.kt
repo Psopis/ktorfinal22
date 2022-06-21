@@ -180,7 +180,7 @@ fun Application.configureRouting() {
         }
         get("/allUsers") {
             val a = transaction {
-                Users.selectAll().map { UserM(it[Users.name], it[Users.idnum], it[Users.user_type]) }
+                Users.selectAll().map { UserM( id = it[Users.idnum], User_type = it[Users.user_type]) }
             }
             call.respondText(Json.encodeToString<List<UserM>>(a), ContentType.Application.Json)
         }
