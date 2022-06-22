@@ -185,14 +185,15 @@ fun Application.configureRouting() {
             call.respondText(Json.encodeToString<List<UserM>>(a), ContentType.Application.Json)
         }
         delete("/deleteUser/{id}") {
-            var param = call.parameters["id"]
+            var param = call.parameters["id"] ?: throw Throwable("Error")
             transaction {
                 Users.deleteWhere { Users.idnum eq param.toString() }
             }
+            call.respondText("success")
         }
 
         post("/addUser") {
-            val parameters = call.receive<UserM>()
+            val parameters = call.receive<UserM>() ?: throw Throwable("Error")
             transaction {
                 Users.insert {
                     it[Users.idnum] = parameters.id.toString()
@@ -200,9 +201,10 @@ fun Application.configureRouting() {
                     it[Users.user_type] = parameters.User_type.toString()
                 }
             }
+            call.respondText("success")
         }
         post("/createRoute"){
-            val parameters = call.receive<MarshrutM>()
+            val parameters = call.receive<MarshrutM>() ?: throw Throwable("Error")
 
             var liststops = mutableListOf<String>()
             var clock = mutableListOf<String>()
@@ -210,12 +212,11 @@ fun Application.configureRouting() {
                 liststops.add(id.first.id)
                 clock.add(id.second)
             }
-
-
             addRoute(parameters, liststops, clock)
+            call.respondText("success")
     }
        post("/editRoute"){
-           val parameters = call.receive<MarshrutM>()
+           val parameters = call.receive<MarshrutM>() ?: throw Throwable("Error")
            var liststops = mutableListOf<String>()
            var clock = mutableListOf<String>()
            for(id in parameters.idOst){
@@ -224,6 +225,7 @@ fun Application.configureRouting() {
            }
            deleteRoute(parameters)
            addRoute(parameters, liststops, clock)
+           call.respondText("success")
        }
         post("/deleteRoute"){
             val parameters = call.receive<MarshrutM>()
