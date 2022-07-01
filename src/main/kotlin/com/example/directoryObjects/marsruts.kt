@@ -1,4 +1,4 @@
-package com.example
+package com.example.directoryObjects
 
 import com.example.directoryObjects.bustoptimewith
 import com.example.directoryObjects.geopos

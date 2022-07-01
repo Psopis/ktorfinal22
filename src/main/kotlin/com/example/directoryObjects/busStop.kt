@@ -17,3 +17,5 @@ data class  BusStopM(val id: String = "",val name:String = "",val geopos : geopo
 data class bustoptimewith(val first :BusStopM,val second:String="")
 @Serializable
 data class busstposCorrestion(val id :Int = 0,val first:List<String>,)
+@Serializable
+data class busStopID(val id:String = "")

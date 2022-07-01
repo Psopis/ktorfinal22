@@ -1,11 +1,11 @@
 package com.example.plugins
 
-import com.example.MarshMTime
-import com.example.MarshrutM
+import com.example.directoryObjects.MarshMTime
+import com.example.directoryObjects.MarshrutM
 import com.example.directoryObjects.*
 import com.example.functions.addRoute
 import com.example.functions.deleteRoute
-import com.example.marshruts
+import com.example.directoryObjects.marshruts
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
@@ -227,10 +227,10 @@ fun Application.configureRouting() {
            addRoute(parameters, liststops, clock)
            call.respondText("success")
        }
-        post("/deleteRoute"){
+        delete("/deleteRoute"){
             val parameters = call.receive<MarshrutM>()
             deleteRoute(parameters)
-
+            call.respondText("success")
         }
 
 }

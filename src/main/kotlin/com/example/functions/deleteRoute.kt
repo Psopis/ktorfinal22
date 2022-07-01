@@ -1,17 +1,13 @@
 package com.example.functions
 
-import com.example.MarshrutM
-import com.example.directoryObjects.busStop
-import com.example.directoryObjects.marshNames
-import com.example.directoryObjects.traictori
-import com.example.marshruts
+import com.example.directoryObjects.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun deleteRoute(parameters: MarshrutM){
-
+var e = 9
     transaction {
         marshNames.deleteWhere {
             marshNames.id.eq(parameters.id.toString())
