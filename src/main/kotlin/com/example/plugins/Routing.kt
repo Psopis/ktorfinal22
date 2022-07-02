@@ -184,10 +184,10 @@ fun Application.configureRouting() {
             }
             call.respondText(Json.encodeToString<List<UserM>>(a), ContentType.Application.Json)
         }
-        delete("/deleteUser/{id}") {
-            var param = call.parameters["id"] ?: throw Throwable("Error")
+        delete("/deleteUser") {
+            val parameters = call.receive<UserM>() ?: throw Throwable("Error")
             transaction {
-                Users.deleteWhere { Users.idnum eq param.toString() }
+                Users.deleteWhere { Users.idnum eq parameters.id }
             }
             call.respondText("success")
         }
