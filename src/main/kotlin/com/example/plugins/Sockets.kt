@@ -71,7 +71,7 @@ fun Application.configureSockets() {
 
 
                 println("driver $driver")
-                driver?.let {
+                driver.let {
                     it.channel.consumeEach { frame ->
                         send(frame.copy())
                         println("frame.copy()  ${frame.copy()}")

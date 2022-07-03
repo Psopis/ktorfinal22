@@ -24,7 +24,7 @@ object DriverGenerator {
                     connection.channel.consumeEach { value ->
                         if (value is Frame.Text) {
                             val geoposition = Json.decodeFromString<geopos>(value.readText())
-                            buschannel.emit(Json.encodeToString<busconnection>(busconnection(connection.id.toInt(), geoposition)))
+                            buschannel.emit(Json.encodeToString<busconnection>(busconnection(connection.id, geoposition)))
                         }
                     }
                 }
