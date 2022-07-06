@@ -119,7 +119,7 @@ fun Application.configureRouting() {
             val l = mutableListOf<busstposCorrestion>()
             val li = mutableListOf<List<String>>()
             val a = transaction {
-                val marshname = marshNames.select(marshNames.id eq res).map { it[marshNames.name] }.first()
+                val marshname = marshNames.select(marshNames.id eq res).map { it[marshNames.name] }.first() ?: throw Throwable("no id")
                 val marshid = marshNames.select(marshNames.name eq marshname).map { it[marshNames.id] }.first()
 
                 marshruts.select(marshruts.idm eq res)
@@ -223,12 +223,12 @@ fun Application.configureRouting() {
                liststops.add(id.first.id)
                clock.add(id.second)
            }
-           deleteRoute(parameters)
+           deleteRoute(MarshM(parameters.id))
            addRoute(parameters, liststops, clock)
            call.respondText("success")
        }
         delete("/deleteRoute"){
-            val parameters = call.receive<MarshrutM>()
+            val parameters = call.receive<MarshM>()
             deleteRoute(parameters)
             call.respondText("success")
         }

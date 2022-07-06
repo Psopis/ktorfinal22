@@ -18,4 +18,4 @@ data class MarshrutM(val id: String = "", val idm_Foreign: String = "", val idOs
 @Serializable
 data class MarshMTime(val id : String = "",val clock:String = "")
 @Serializable
-data class MarshM(val id: String = "", val idOst:String)
+data class MarshM(val id: String = "")
