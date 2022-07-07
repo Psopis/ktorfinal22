@@ -6,6 +6,7 @@ import com.example.directoryObjects.*
 import com.example.functions.addRoute
 import com.example.functions.deleteRoute
 import com.example.directoryObjects.marshruts
+import com.example.functions.UpdateDataBase
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
@@ -24,6 +25,11 @@ import org.jetbrains.exposed.sql.deleteWhere as deleteWhere
 fun Application.configureRouting() {
 
     routing {
+        get("/version"){
+            val a =transaction { dbversion.selectAll().map{dbversionface(version = it[dbversion.version])}.first() }
+
+        call.respondText(a.version.toString())
+        }
         get("/sign/{id_sign}") {
             val siginId = call.parameters["id_sign"]
             val a = transaction {
@@ -213,6 +219,7 @@ fun Application.configureRouting() {
                 clock.add(id.second)
             }
             addRoute(parameters, liststops, clock)
+            UpdateDataBase()
             call.respondText("success")
     }
        post("/editRoute"){
@@ -225,11 +232,13 @@ fun Application.configureRouting() {
            }
            deleteRoute(MarshM(parameters.id))
            addRoute(parameters, liststops, clock)
+           UpdateDataBase()
            call.respondText("success")
        }
         delete("/deleteRoute"){
             val parameters = call.receive<MarshM>()
             deleteRoute(parameters)
+            UpdateDataBase()
             call.respondText("success")
         }
 
