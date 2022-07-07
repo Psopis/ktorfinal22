@@ -211,6 +211,9 @@ fun Application.configureRouting() {
         }
         post("/createRoute"){
             val parameters = call.receive<MarshrutM>() ?: throw Throwable("Error")
+val idmarsh = transaction { marshruts.select(marshruts.idm eq parameters.id).map{MarshM(it[marshruts.idm])} }
+
+        if(idmarsh.isEmpty()){
 
             var liststops = mutableListOf<String>()
             var clock = mutableListOf<String>()
@@ -222,6 +225,8 @@ fun Application.configureRouting() {
             UpdateDataBase()
             call.respondText("success")
     }
+            else call.respondText("Route with id = ${parameters.id} in database!! Change id")
+        }
        post("/editRoute"){
            val parameters = call.receive<MarshrutM>() ?: throw Throwable("Error")
            var liststops = mutableListOf<String>()
@@ -237,8 +242,8 @@ fun Application.configureRouting() {
        }
         delete("/deleteRoute"){
             val parameters = call.receive<MarshM>()
+            if(deleteRoute(parameters)) UpdateDataBase()
             deleteRoute(parameters)
-            UpdateDataBase()
             call.respondText("success")
         }
 

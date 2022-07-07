@@ -7,19 +7,24 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun deleteRoute(parameters: MarshM){
-var e = 9
-    transaction {
-        var allbusStop = marshruts.select(marshruts.idm eq parameters.id).map{it[marshruts.idost]}
-        marshNames.deleteWhere {
-            marshNames.id.eq(parameters.id.toString())
-        }
+fun deleteRoute(parameters: MarshM): Boolean {
 
-        for (busStopWithT in allbusStop){
-            busStop.deleteWhere {
-                busStop.id eq busStopWithT
+        var allbusStop= transaction {
+            marshruts.select(marshruts.idm eq parameters.id).map{it[marshruts.idost]}
+                }
+    if(allbusStop.isEmpty()) return false
+
+    transaction {
+
+            marshNames.deleteWhere {
+                marshNames.id.eq(parameters.id.toString())
             }
-        }
+
+            for (busStopWithT in allbusStop) {
+                busStop.deleteWhere {
+                    busStop.id eq busStopWithT
+                }
+            }
             traictori.deleteWhere {
                 traictori.idm eq parameters.id.toString()
             }
@@ -29,4 +34,5 @@ var e = 9
 
 
     }
+    return true
 }
