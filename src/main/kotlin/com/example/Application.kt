@@ -20,6 +20,7 @@ fun main() {
         password ="7d2459c6a2a75d029f3ecaf7b4564bbf0114f96083a4e504886771cb212c344f"
     )
 
+
 //    Database.connect(
 //        "jdbc:postgresql://ec2-52-206-182-219.compute-1.amazonaws.com:5432/d1a862t8349704?sslmode=require",
 //        driver = "org.postgresql.Driver",
